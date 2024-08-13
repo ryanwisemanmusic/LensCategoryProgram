@@ -18,6 +18,12 @@ struct lensType
 
 //Preprocessor functions
 lensType getLensData();
+void getLensName(string, lensType &);
+void getMountType(string, lensType &);
+void getBrandName (string, lensType &);
+void getSensorType(string, lensType &);
+void get_mm_Length(string, lensType &);
+void getAperatureStop(string, lensType &);
 void printLensData(lensType lens);
 
 int main()
@@ -26,6 +32,11 @@ int main()
 }
 
 lensType getLensData()
+{
+
+}
+
+void getLensName()
 {
 
 }
