@@ -2,11 +2,13 @@
 #include <cmath>
 #include <iomanip>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
 ifstream iFile;
 ofstream oFile;
+
 //Lens Details contained in struct
 struct lensType
 {
@@ -38,65 +40,68 @@ int main()
 lensType getLensData()
 {
     lensType l;
+
+    iFile.open("Lens Data V1.txt");
     cout << "Enter lens name: ";
-    cin >> l.lensname;
+    iFile >> l.lensname;
     cout << "Enter mount type: ";
-    cin >> l.mount_type;
+    iFile >> l.mount_type;
     cout << "Enter brand name: ";
-    cin >> l.brandName;
+    iFile >> l.brandName;
     cout << "Enter sensor type: ";
-    cin >> l.sensor_type;
+    iFile >> l.sensor_type;
     cout << "Enter mm length";
-    cin >> l.mm_lenth;
+    iFile >> l.mm_lenth;
     cout << "Enter f/t-stop";
-    cin >> l.aperaturestop;
+    iFile >> l.aperaturestop;
 
     while (true)
     {
         cout << "Enter a cost";
-        cin >> l.cost;
+        iFile >> l.cost;
         /*If incorrect price or string is used,
         return an error with the price*/
-        if (cin.fail() || l.cost < 0 || !l.cost)
+        if (iFile.fail() || l.cost < 0 || !l.cost)
         {
-            cin.clear();
-            cin.ignore(256, '\n');
+            iFile.clear();
+            iFile.ignore(256, '\n');
             cout << "Invalid price!";
         }
         
     }
+    iFile.close();
     
 }
 
 void getLensName(const string input, lensType &lens)
 {
     cout << input;
-    cin >> lens.lensname;
+    iFile >> lens.lensname;
 }
 void getMountType(const string input, lensType &lens)
 {
     cout << input;
-    cin >> lens.mount_type;
+    iFile >> lens.mount_type;
 }
 void getBrandName(const string input, lensType &lens)
 {
     cout << input;
-    cin >> lens.brandName;
+    iFile >> lens.brandName;
 }
 void getSensorType(const string input, lensType &lens)
 {
     cout << input;
-    cin >> lens.sensor_type;
+    iFile >> lens.sensor_type;
 }
 void get_mm_Length(const string input, lensType &lens)
 {
     cout << input;
-    cin >> lens.mm_lenth;
+    iFile >> lens.mm_lenth;
 }
 void getAperatureStop(const string input, lensType &lens)
 {
     cout << input;
-    cin >> lens.aperaturestop;
+    iFile >> lens.aperaturestop;
 }
 
 //Need to rework this with arrays since I want multiple output files. 
