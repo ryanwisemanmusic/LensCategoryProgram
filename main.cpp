@@ -12,63 +12,81 @@ ofstream oFile;
 //Lens Details contained in struct
 struct lensType
 {
-    string lens;
-    string lensname = "", mount_type = "", brandName = "", 
-    sensor_type = "", mm_lenth = "", 
-    aperaturestop = ""; 
+    string lens, lensname, mount_type, brandName, 
+    sensor_type, mm_lenth, 
+    aperaturestop, USDcost; 
     double cost;
-    string USDcost = "";
+
+    lensType()
+        : lensname(""), mount_type(""), brandName(""), 
+        sensor_type(""), mm_lenth(""), aperaturestop(""), 
+        cost(0.0), USDcost("") {}
 };
 
 //Preprocessor functions
 lensType getLensData();
-void addLensCost(string, lensType &lens);
+void addLensCost(lensType &lens);
 void getLensName(string, lensType &);
 void getMountType(string, lensType &);
 void getBrandName (string, lensType &);
 void getSensorType(string, lensType &);
 void get_mm_Length(string, lensType &);
 void getAperatureStop(string, lensType &);
+void promptUserInput(lensType &lens);
 void printLensData(lensType lens);
 
 int main()
 {
-    lensType lens = getLensData();
+    lensType lens;
+
+    iFile.open("Lens Data V1.txt");
+    if (!iFile.is_open() || iFile.peek() == EOF)
+    {
+        cout << "Input file is empty, please enter lens data";
+        promptUserInput(lens);
+
+        if (oFile.is_open())
+        {
+            oFile << lens.lensname << "\n"
+            << lens.mount_type << "\n"
+            << lens.brandName << "\n"
+            << lens.sensor_type << "\n"
+            << lens.mm_lenth << "\n"
+            << lens.aperaturestop << "\n"
+            << lens.cost << "\n";
+            oFile.close();
+        }
+    }
+    else
+    {
+        lens = getLensData();
+    }
     printLensData(lens);
     return 0;
 }
 
-lensType getLensData()
+void promptUserInput(lensType &lens)
 {
-    lensType l;
-
-    iFile.open("Lens Data V1.txt");
-    if (!iFile.is_open())
-    {
-        cerr << "Error: File cannot be opened!\n";
-        exit(1);
-    }
-
     cout << "Enter lens name: ";
-    iFile >> l.lensname;
+    cin >> lens.lensname;
     cout << "Enter mount type: ";
-    iFile >> l.mount_type;
+    cin >> lens.mount_type;
     cout << "Enter brand name: ";
-    iFile >> l.brandName;
+    cin >> lens.brandName;
     cout << "Enter sensor type: ";
-    iFile >> l.sensor_type;
-    cout << "Enter mm length";
-    iFile >> l.mm_lenth;
-    cout << "Enter f/t-stop";
-    iFile >> l.aperaturestop;
+    cin >> lens.sensor_type;
+    cout << "Enter mm length: ";
+    cin >> lens.mm_lenth;
+    cout << "Enter f/t-stop: ";
+    cin >> lens.aperaturestop;
 
     while (true)
     {
         cout << "Enter a cost";
-        iFile >> l.cost;
+        iFile >> lens.cost;
         /*If incorrect price or string is used,
         return an error with the price*/
-        if (iFile.fail() || l.cost < 0)
+        if (iFile.fail() || lens.cost < 0)
         {
             iFile.clear();
             iFile.ignore(256, '\n');
@@ -78,6 +96,23 @@ lensType getLensData()
         {
             break;
         }
+    }
+
+    addLensCost(lens);
+}
+
+lensType getLensData()
+{
+    lensType l;
+    cout << "Reading data from file...\n ";
+    iFile >> l.lensname >> l.mount_type >> l.brandName 
+    >> l.sensor_type >> l.mm_lenth >> l.aperaturestop;
+
+    if (iFile.fail())
+    {
+        cerr << "Error: File cannot be opened!\n";
+        iFile.close();
+        exit(1);
     }
 
     addLensCost(l);
@@ -146,4 +181,5 @@ void printLensData(const lensType lens)
     << lens.brandName << lens.sensor_type 
     << lens.mm_lenth << lens.aperaturestop
     << lens.USDcost;
+    oFile.close();
 }
