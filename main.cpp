@@ -17,11 +17,12 @@ struct lensType
     sensor_type = "", mm_lenth = "", 
     aperaturestop = ""; 
     double cost;
-    char USDcost = '\0';
+    string USDcost = "";
 };
 
 //Preprocessor functions
 lensType getLensData();
+void addLensCost(string, lensType &lens);
 void getLensName(string, lensType &);
 void getMountType(string, lensType &);
 void getBrandName (string, lensType &);
@@ -42,6 +43,12 @@ lensType getLensData()
     lensType l;
 
     iFile.open("Lens Data V1.txt");
+    if (!iFile.is_open())
+    {
+        cerr << "Error: File cannot be opened!\n";
+        exit(1);
+    }
+
     cout << "Enter lens name: ";
     iFile >> l.lensname;
     cout << "Enter mount type: ";
@@ -61,16 +68,21 @@ lensType getLensData()
         iFile >> l.cost;
         /*If incorrect price or string is used,
         return an error with the price*/
-        if (iFile.fail() || l.cost < 0 || !l.cost)
+        if (iFile.fail() || l.cost < 0)
         {
             iFile.clear();
             iFile.ignore(256, '\n');
-            cout << "Invalid price!";
+            cout << "Invalid price!\n";
         }
-        
+        else
+        {
+            break;
+        }
     }
+
+    addLensCost(l);
     iFile.close();
-    
+    return l;
 }
 
 void getLensName(const string input, lensType &lens)
@@ -104,10 +116,34 @@ void getAperatureStop(const string input, lensType &lens)
     iFile >> lens.aperaturestop;
 }
 
+void addLensCost (lensType &lens)
+{
+    if (lens.cost >= 0 && lens.cost <= 250)
+    {
+        lens.USDcost = "Cheap";
+    }
+
+    else if (lens.cost >= 250.1 && lens.cost <= 1000)
+    {
+        lens.USDcost = "Moderately Priced";
+    }
+
+    else if (lens.cost >= 1000.1 && lens.cost <= 9000)
+    {
+        lens.USDcost = "Expensive";
+    }
+}
 //Need to rework this with arrays since I want multiple output files. 
 void printLensData(const lensType lens)
 {
-    getLensName, getMountType, getBrandName,
-    getSensorType, get_mm_Length, getAperatureStop;
-    oFile << "output.txt";
+    oFile.open("output.txt");
+    if (!oFile.is_open())
+    {
+        cerr << "Error: Cannot open this file\n";
+        return;
+    }
+    oFile << lens.lensname << lens.mount_type 
+    << lens.brandName << lens.sensor_type 
+    << lens.mm_lenth << lens.aperaturestop
+    << lens.USDcost;
 }
